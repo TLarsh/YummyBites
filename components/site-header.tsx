@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { Menu, X, ShoppingCart, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -23,11 +23,18 @@ export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const { user, isAuthenticated, signOut } = useAuth()
+  const headerRef = useRef(null)
 
   // Check if we're on an admin page or auth page
   const isAdminPage = pathname.startsWith("/admin")
   const isAuthPage =
     pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up") || pathname.startsWith("/forgot-password")
+
+  const [showHeader, setShowHeader] = useState(!(isAdminPage || isAuthPage))
+
+  useEffect(() => {
+    setShowHeader(!(isAdminPage || isAuthPage))
+  }, [isAdminPage, isAuthPage])
 
   // Handle scroll effect
   useEffect(() => {
@@ -37,9 +44,6 @@ export function SiteHeader() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  // Don't show the site header on admin pages or auth pages
-  if (isAdminPage || isAuthPage) return null
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -54,8 +58,31 @@ export function SiteHeader() {
     signOut()
   }
 
+  useEffect(() => {
+    // Set the header height CSS variable
+    const header = headerRef.current
+    if (header) {
+      const headerHeight = header.offsetHeight
+      document.documentElement.style.setProperty("--header-height", `${headerHeight}px`)
+    }
+
+    // Prevent body scrolling when menu is open
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isOpen])
+
+  if (!showHeader) return null
+
   return (
     <header
+      ref={headerRef}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled ? "bg-background/95 backdrop-blur-md shadow-md py-2" : "bg-transparent py-4",
@@ -141,9 +168,9 @@ export function SiteHeader() {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="flex items-center space-x-4 md:hidden">
+        <div className="flex items-center space-x-3 md:hidden">
           <Link href="/checkout">
-            <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full">
+            <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full h-9 w-9">
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
@@ -151,9 +178,9 @@ export function SiteHeader() {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="User Account" className="rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                <Button variant="ghost" size="icon" aria-label="User Account" className="rounded-full h-9 w-9">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
                       {user?.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -182,7 +209,7 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="ghost" asChild className="font-poppins">
+            <Button variant="ghost" size="sm" asChild className="font-poppins text-sm h-9 px-3">
               <Link href="/sign-in">Sign in</Link>
             </Button>
           )}
@@ -193,7 +220,7 @@ export function SiteHeader() {
             size="icon"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
-            className="rounded-full"
+            className="rounded-full h-9 w-9 ml-1"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -202,16 +229,16 @@ export function SiteHeader() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-md border-t animate-fadeIn">
-          <div className="container py-4 space-y-2">
+        <div className="md:hidden fixed top-[var(--header-height)] left-0 right-0 bottom-0 bg-background/98 backdrop-blur-md border-t z-40 animate-in slide-in-from-top duration-300 overflow-auto">
+          <div className="container py-6 space-y-0 flex flex-col">
             {navItems.map((item, index) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  `block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn`,
+                  `flex items-center py-4 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn border-b border-muted`,
                   pathname === item.href ? "text-primary font-semibold" : "text-foreground",
-                  `animate-delay-${index * 100}`,
+                  `animate-delay-${index * 50}`,
                 )}
                 onClick={() => setIsOpen(false)}
               >
@@ -223,9 +250,10 @@ export function SiteHeader() {
               <>
                 <Link
                   href="/account"
-                  className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
+                  className="flex items-center py-4 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn border-b border-muted"
                   onClick={() => setIsOpen(false)}
                 >
+                  <User className="mr-3 h-4 w-4" />
                   My Account
                 </Link>
                 <button
@@ -233,17 +261,19 @@ export function SiteHeader() {
                     handleSignOut()
                     setIsOpen(false)
                   }}
-                  className="block w-full text-left py-3 text-base font-medium transition-colors hover:text-destructive text-destructive/90 font-poppins animate-fadeIn animate-delay-600"
+                  className="flex items-center py-4 text-base font-medium w-full text-left transition-colors hover:text-destructive text-destructive/90 font-poppins animate-fadeIn"
                 >
+                  <LogOut className="mr-3 h-4 w-4" />
                   Sign out
                 </button>
               </>
             ) : (
               <Link
                 href="/sign-in"
-                className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
+                className="flex items-center py-4 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn border-b border-muted"
                 onClick={() => setIsOpen(false)}
               >
+                <User className="mr-3 h-4 w-4" />
                 Sign in
               </Link>
             )}
