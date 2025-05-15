@@ -31,8 +31,8 @@ export function SiteHeader() {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Menu", href: "/menu" },
-    { name: "Reservations", href: "/reservations" },
     { name: "Order Online", href: "/order" },
+    { name: "Reservations", href: "/reservations" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ]
@@ -75,7 +75,7 @@ export function SiteHeader() {
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <Link href="/order">
+          <Link href="/checkout">
             <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full">
               <ShoppingCart className="h-5 w-5" />
             </Button>
@@ -90,7 +90,7 @@ export function SiteHeader() {
 
         {/* Mobile Menu Button */}
         <div className="flex items-center space-x-4 md:hidden">
-          <Link href="/order">
+          <Link href="/checkout">
             <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full">
               <ShoppingCart className="h-5 w-5" />
             </Button>
