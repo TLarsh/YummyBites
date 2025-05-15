@@ -3,18 +3,31 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { Menu, X, ShoppingCart, User } from "lucide-react"
+import { Menu, X, ShoppingCart, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/contexts/auth-context"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const { user, isAuthenticated, signOut } = useAuth()
 
-  // Check if we're on an admin page
+  // Check if we're on an admin page or auth page
   const isAdminPage = pathname.startsWith("/admin")
+  const isAuthPage =
+    pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up") || pathname.startsWith("/forgot-password")
 
   // Handle scroll effect
   useEffect(() => {
@@ -25,8 +38,8 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Don't show the site header on admin pages
-  if (isAdminPage) return null
+  // Don't show the site header on admin pages or auth pages
+  if (isAdminPage || isAuthPage) return null
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -36,6 +49,10 @@ export function SiteHeader() {
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ]
+
+  const handleSignOut = () => {
+    signOut()
+  }
 
   return (
     <header
@@ -80,11 +97,46 @@ export function SiteHeader() {
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
-          <Link href="/account">
-            <Button variant="ghost" size="icon" aria-label="Account" className="rounded-full">
-              <User className="h-5 w-5" />
+
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="User Account" className="rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                      {user?.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-poppins">My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/account" className="cursor-pointer w-full font-roboto">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/account/orders" className="cursor-pointer w-full font-roboto">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Orders
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive font-roboto">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="ghost" asChild className="font-poppins">
+              <Link href="/sign-in">Sign in</Link>
             </Button>
-          </Link>
+          )}
+
           <ThemeToggle />
         </div>
 
@@ -95,6 +147,46 @@ export function SiteHeader() {
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
+
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="User Account" className="rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                      {user?.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-poppins">My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/account" className="cursor-pointer w-full font-roboto">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/account/orders" className="cursor-pointer w-full font-roboto">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Orders
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive font-roboto">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="ghost" asChild className="font-poppins">
+              <Link href="/sign-in">Sign in</Link>
+            </Button>
+          )}
+
           <ThemeToggle />
           <Button
             variant="ghost"
@@ -126,13 +218,35 @@ export function SiteHeader() {
                 {item.name}
               </Link>
             ))}
-            <Link
-              href="/account"
-              className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
-              onClick={() => setIsOpen(false)}
-            >
-              My Account
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/account"
+                  className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
+                  onClick={() => setIsOpen(false)}
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={() => {
+                    handleSignOut()
+                    setIsOpen(false)
+                  }}
+                  className="block w-full text-left py-3 text-base font-medium transition-colors hover:text-destructive text-destructive/90 font-poppins animate-fadeIn animate-delay-600"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       )}

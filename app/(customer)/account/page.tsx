@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { ScrollAnimation } from "@/components/scroll-animation"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,21 +21,22 @@ import {
   Edit,
   ChevronRight,
   Clock,
+  Loader2,
 } from "lucide-react"
 import Link from "next/link"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function AccountPage() {
+  const router = useRouter()
+  const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const [activeTab, setActiveTab] = useState("profile")
 
-  // Mock user data
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "(123) 456-7890",
-    address: "123 Main St, Apt 4B, New York, NY 10001",
-    avatar: "/placeholder.svg?height=100&width=100",
-    joinDate: "January 2023",
-  }
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/sign-in")
+    }
+  }, [isLoading, isAuthenticated, router])
 
   // Mock order history
   const orders = [
@@ -97,6 +99,23 @@ export default function AccountPage() {
     },
   ]
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+          <p className="text-lg font-poppins">Loading your account...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If not authenticated and not loading, the useEffect will redirect to sign-in
+  if (!isAuthenticated && !isLoading) {
+    return null
+  }
+
   return (
     <div className="container py-24 mt-16">
       <ScrollAnimation type="fadeIn">
@@ -115,11 +134,11 @@ export default function AccountPage() {
             <CardContent className="p-6">
               <div className="flex flex-col items-center mb-6">
                 <Avatar className="h-20 w-20 mb-4">
-                  <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                  <AvatarFallback className="text-lg font-poppins">{user.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src="/placeholder.svg?height=100&width=100" alt={user?.name || "User"} />
+                  <AvatarFallback className="text-lg font-poppins">{user?.name?.charAt(0) || "U"}</AvatarFallback>
                 </Avatar>
-                <h2 className="text-xl font-semibold font-poppins">{user.name}</h2>
-                <p className="text-sm text-muted-foreground font-roboto">Member since {user.joinDate}</p>
+                <h2 className="text-xl font-semibold font-poppins">{user?.name || "User"}</h2>
+                <p className="text-sm text-muted-foreground font-roboto">Member since January 2023</p>
               </div>
 
               <nav className="space-y-1">
@@ -172,7 +191,11 @@ export default function AccountPage() {
                   Settings
                 </Button>
                 <Separator className="my-2" />
-                <Button variant="ghost" className="w-full justify-start text-destructive font-poppins">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-destructive font-poppins"
+                  onClick={signOut}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </Button>
@@ -196,19 +219,19 @@ export default function AccountPage() {
                       <Label htmlFor="name" className="font-poppins">
                         Full Name
                       </Label>
-                      <Input id="name" defaultValue={user.name} className="font-roboto" />
+                      <Input id="name" defaultValue={user?.name || ""} className="font-roboto" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email" className="font-poppins">
                         Email Address
                       </Label>
-                      <Input id="email" type="email" defaultValue={user.email} className="font-roboto" />
+                      <Input id="email" type="email" defaultValue={user?.email || ""} className="font-roboto" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone" className="font-poppins">
                         Phone Number
                       </Label>
-                      <Input id="phone" defaultValue={user.phone} className="font-roboto" />
+                      <Input id="phone" defaultValue="(123) 456-7890" className="font-roboto" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="dob" className="font-poppins">
@@ -224,7 +247,11 @@ export default function AccountPage() {
                     <Label htmlFor="address" className="font-poppins">
                       Delivery Address
                     </Label>
-                    <Input id="address" defaultValue={user.address} className="font-roboto" />
+                    <Input
+                      id="address"
+                      defaultValue="123 Main St, Apt 4B, New York, NY 10001"
+                      className="font-roboto"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
