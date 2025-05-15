@@ -114,6 +114,53 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Enhanced category card effects */
+.category-card-image {
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.category-card:hover .category-card-image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.category-card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0.8;
+  transition: opacity 0.5s ease;
+}
+
+.category-card:hover .category-card-overlay {
+  opacity: 1;
+}
+
+.category-card-title {
+  transform: translateY(0);
+  transition: transform 0.4s ease;
+}
+
+.category-card:hover .category-card-title {
+  transform: translateY(-5px);
+}
+
+/* Special offers card effects */
+.special-offer-image {
+  transition: transform 0.5s ease;
+}
+
+.special-offer:hover .special-offer-image {
+  transform: scale(1.03);
+}
+
+.special-offer-badge {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.special-offer:hover .special-offer-badge {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* Button animations */
 .btn-hover-effect {
   position: relative;
@@ -190,8 +237,69 @@ html {
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.5s ease forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s ease forwards;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s ease-in-out infinite;
 }
 
 .animate-delay-100 {
