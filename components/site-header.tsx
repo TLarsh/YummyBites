@@ -40,23 +40,25 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-background/95 backdrop-blur-sm shadow-md py-2" : "bg-transparent py-4",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        isScrolled ? "bg-background/95 backdrop-blur-md shadow-md py-2" : "bg-transparent py-4",
       )}
     >
       <div className="container flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-primary">YummyBites</span>
+        <Link href="/" className="flex items-center space-x-2 group">
+          <span className="text-2xl font-bold text-primary font-poppins transition-all duration-300 group-hover:scale-105">
+            YummyBites
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden md:flex items-center space-x-8">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
+                "text-sm font-medium transition-all duration-300 hover:text-primary relative font-poppins group",
                 pathname === item.href
                   ? "text-primary font-semibold"
                   : isScrolled
@@ -65,6 +67,8 @@ export function SiteHeader() {
               )}
             >
               {item.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              {pathname === item.href && <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary"></span>}
             </Link>
           ))}
         </nav>
@@ -72,12 +76,12 @@ export function SiteHeader() {
         {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/cart">
-            <Button variant="ghost" size="icon" aria-label="Shopping Cart">
+            <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full">
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
           <Link href="/account">
-            <Button variant="ghost" size="icon" aria-label="Account">
+            <Button variant="ghost" size="icon" aria-label="Account" className="rounded-full">
               <User className="h-5 w-5" />
             </Button>
           </Link>
@@ -87,12 +91,18 @@ export function SiteHeader() {
         {/* Mobile Menu Button */}
         <div className="flex items-center space-x-4 md:hidden">
           <Link href="/cart">
-            <Button variant="ghost" size="icon" aria-label="Shopping Cart">
+            <Button variant="ghost" size="icon" aria-label="Shopping Cart" className="rounded-full">
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
           <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
+            className="rounded-full"
+          >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -100,15 +110,16 @@ export function SiteHeader() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden bg-background border-t">
+        <div className="md:hidden bg-background/95 backdrop-blur-md border-t animate-fadeIn">
           <div className="container py-4 space-y-2">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "block py-2 text-base font-medium transition-colors hover:text-primary",
+                  `block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn`,
                   pathname === item.href ? "text-primary font-semibold" : "text-foreground",
+                  `animate-delay-${index * 100}`,
                 )}
                 onClick={() => setIsOpen(false)}
               >
@@ -117,7 +128,7 @@ export function SiteHeader() {
             ))}
             <Link
               href="/account"
-              className="block py-2 text-base font-medium transition-colors hover:text-primary"
+              className="block py-3 text-base font-medium transition-colors hover:text-primary font-poppins animate-fadeIn animate-delay-500"
               onClick={() => setIsOpen(false)}
             >
               My Account

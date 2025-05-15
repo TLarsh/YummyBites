@@ -10,30 +10,26 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/placeholder.svg?height=1080&width=1920"
-            alt="Restaurant hero image"
-            fill
-            className="object-cover"
-            priority
-          />
+          <Image src="/images/hero-image.jpg" alt="Delicious food spread" fill className="object-cover" priority />
           <div className="absolute inset-0 hero-gradient" />
         </div>
         <div className="container relative z-10 text-white">
-          <div className="max-w-2xl space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold">Delicious Food, Delivered to Your Doorstep</h1>
-            <p className="text-lg md:text-xl opacity-90">
+          <div className="max-w-2xl space-y-8 animate-fadeIn">
+            <h1 className="text-4xl md:text-6xl font-bold font-poppins leading-tight">
+              Delicious Food, <span className="text-primary/90">Delivered</span> to Your Doorstep
+            </h1>
+            <p className="text-lg md:text-xl opacity-90 font-roboto">
               Experience the taste of excellence with our carefully crafted dishes made from the freshest ingredients.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="font-semibold">
+              <Button asChild size="lg" className="font-semibold font-poppins">
                 <Link href="/order">Order Online</Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="bg-transparent text-white border-white hover:bg-white/10 font-semibold"
+                className="bg-transparent text-white border-white hover:bg-white/10 font-semibold font-poppins"
               >
                 <Link href="/reservations">Book a Table</Link>
               </Button>
@@ -43,43 +39,54 @@ export default function HomePage() {
       </section>
 
       {/* Featured Categories */}
-      <section className="py-16 bg-muted/50">
+      <section className="py-20 bg-muted/30">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Explore Our Menu</h2>
+          <div className="text-center mb-16 animate-fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">Explore Our Menu</h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 title: "Main Courses",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/main-courses.jpg",
                 description: "Delicious entrées prepared with the finest ingredients",
                 link: "/menu/main-courses",
+                delay: "animate-delay-100",
               },
               {
                 title: "Appetizers",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/appetizers.jpg",
                 description: "Start your meal with our selection of tasty appetizers",
                 link: "/menu/appetizers",
+                delay: "animate-delay-200",
               },
               {
                 title: "Desserts",
-                image: "/placeholder.svg?height=300&width=400",
+                image: "/images/desserts.jpg",
                 description: "Sweet treats to perfectly end your dining experience",
                 link: "/menu/desserts",
+                delay: "animate-delay-300",
               },
             ].map((category) => (
-              <Card key={category.title} className="overflow-hidden transition-all hover:shadow-lg">
-                <div className="relative h-48">
+              <Card
+                key={category.title}
+                className={`overflow-hidden card-hover-effect animate-fadeIn ${category.delay}`}
+              >
+                <div className="relative h-56">
                   <Image
                     src={category.image || "/placeholder.svg"}
                     alt={category.title}
                     fill
                     className="object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                    <h3 className="text-2xl font-semibold p-6 text-white font-poppins">{category.title}</h3>
+                  </div>
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{category.title}</h3>
-                  <p className="text-muted-foreground mb-4">{category.description}</p>
-                  <Button asChild variant="outline">
+                  <p className="text-muted-foreground mb-4 font-roboto">{category.description}</p>
+                  <Button asChild variant="outline" className="font-poppins w-full">
                     <Link href={category.link}>View Menu</Link>
                   </Button>
                 </CardContent>
@@ -89,49 +96,61 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Decorative Divider */}
+      <div className="section-divider"></div>
+
       {/* Special Offers */}
-      <section className="py-16">
+      <section className="py-20 decorative-dots">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Special Offers</h2>
+          <div className="text-center mb-16 animate-fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">Special Offers</h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="flex flex-col md:flex-row overflow-hidden">
-              <div className="relative w-full md:w-2/5 h-48 md:h-auto">
+            <Card className="flex flex-col md:flex-row overflow-hidden card-hover-effect animate-fadeIn animate-delay-100">
+              <div className="relative w-full md:w-2/5 h-56 md:h-auto">
                 <Image
-                  src="/placeholder.svg?height=400&width=300"
-                  alt="Weekend special"
+                  src="/images/weekend-special.jpg"
+                  alt="Weekend special - Family Feast Bundle"
                   fill
                   className="object-cover"
                 />
+                <div className="absolute top-4 left-4 bg-primary text-white px-4 py-1 rounded-full text-sm font-medium font-poppins">
+                  20% OFF
+                </div>
               </div>
               <CardContent className="flex-1 p-6">
-                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium inline-block mb-3">
+                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium inline-block mb-3 font-poppins">
                   Weekend Special
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Family Feast Bundle</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-2xl font-semibold mb-3 font-poppins">Family Feast Bundle</h3>
+                <p className="text-muted-foreground mb-6 font-roboto">
                   Get 20% off when you order our family meal package, perfect for 4-6 people. Includes appetizers, main
                   courses, and desserts.
                 </p>
-                <Button asChild>
+                <Button asChild className="font-poppins w-full sm:w-auto">
                   <Link href="/order/special/family-feast">Order Now</Link>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="flex flex-col md:flex-row overflow-hidden">
-              <div className="relative w-full md:w-2/5 h-48 md:h-auto">
-                <Image src="/placeholder.svg?height=400&width=300" alt="Lunch special" fill className="object-cover" />
+            <Card className="flex flex-col md:flex-row overflow-hidden card-hover-effect animate-fadeIn animate-delay-200">
+              <div className="relative w-full md:w-2/5 h-56 md:h-auto">
+                <Image src="/images/lunch-special.jpg" alt="Weekday Lunch special" fill className="object-cover" />
+                <div className="absolute top-4 left-4 bg-primary text-white px-4 py-1 rounded-full text-sm font-medium font-poppins">
+                  $12.99
+                </div>
               </div>
               <CardContent className="flex-1 p-6">
-                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium inline-block mb-3">
+                <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium inline-block mb-3 font-poppins">
                   Weekday Lunch
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Express Lunch Menu</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-2xl font-semibold mb-3 font-poppins">Express Lunch Menu</h3>
+                <p className="text-muted-foreground mb-6 font-roboto">
                   Enjoy our quick lunch specials for just $12.99, available Monday to Friday from 11am to 2pm. Includes
                   a main dish and beverage.
                 </p>
-                <Button asChild>
+                <Button asChild className="font-poppins w-full sm:w-auto">
                   <Link href="/order/special/express-lunch">Order Now</Link>
                 </Button>
               </CardContent>
@@ -141,9 +160,12 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-muted/50">
+      <section className="py-20 bg-muted/30">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+          <div className="text-center mb-16 animate-fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">What Our Customers Say</h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -151,27 +173,30 @@ export default function HomePage() {
                 rating: 5,
                 comment:
                   "The food was absolutely delicious and the service was impeccable. Will definitely be coming back!",
+                delay: "animate-delay-100",
               },
               {
                 name: "Michael Chen",
                 rating: 5,
                 comment:
                   "Best restaurant in town! The online ordering system is so convenient and the food arrives hot and fresh every time.",
+                delay: "animate-delay-200",
               },
               {
                 name: "Emily Rodriguez",
                 rating: 4,
                 comment:
                   "Great atmosphere and amazing food. The reservation system was easy to use and they accommodated our special requests.",
+                delay: "animate-delay-300",
               },
             ].map((testimonial, index) => (
-              <Card key={index} className="p-6">
+              <Card key={index} className={`p-6 card-hover-effect animate-fadeIn ${testimonial.delay}`}>
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold font-poppins">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div className="ml-4">
-                    <h4 className="font-semibold">{testimonial.name}</h4>
+                    <h4 className="font-semibold font-poppins">{testimonial.name}</h4>
                     <div className="flex">
                       {Array.from({ length: testimonial.rating }).map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-primary text-primary" />
@@ -179,7 +204,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-muted-foreground">{testimonial.comment}</p>
+                <p className="text-muted-foreground font-roboto">{testimonial.comment}</p>
               </Card>
             ))}
           </div>
@@ -187,38 +212,45 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose YummyBites</h2>
+          <div className="text-center mb-16 animate-fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">Why Choose YummyBites</h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: Utensils,
                 title: "Quality Food",
                 description: "We use only the freshest ingredients to prepare our dishes",
+                delay: "animate-delay-100",
               },
               {
                 icon: Clock,
                 title: "Fast Delivery",
                 description: "Quick and reliable delivery to your doorstep",
+                delay: "animate-delay-200",
               },
               {
                 icon: Calendar,
                 title: "Easy Reservations",
                 description: "Book a table online in just a few clicks",
+                delay: "animate-delay-300",
               },
               {
                 icon: ShoppingBag,
                 title: "Online Ordering",
                 description: "Convenient ordering system for pickup or delivery",
+                delay: "animate-delay-400",
               },
             ].map((feature, index) => (
-              <Card key={index} className="p-6 text-center">
-                <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
-                  <feature.icon className="w-6 h-6" />
+              <Card key={index} className={`p-6 text-center card-hover-effect animate-fadeIn ${feature.delay}`}>
+                <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                  <feature.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-3 font-poppins">{feature.title}</h3>
+                <p className="text-muted-foreground font-roboto">{feature.description}</p>
               </Card>
             ))}
           </div>
@@ -226,22 +258,25 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Order?</h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8">
+      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="decorative-dots absolute inset-0"></div>
+        </div>
+        <div className="container relative z-10 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 font-poppins animate-fadeIn">Ready to Order?</h2>
+          <p className="text-xl opacity-90 max-w-2xl mx-auto mb-8 font-roboto animate-fadeIn animate-delay-100">
             Experience the taste of YummyBites today. Order online for delivery or pickup, or book a table for a
             memorable dining experience.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="font-semibold">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fadeIn animate-delay-200">
+            <Button asChild size="lg" variant="secondary" className="font-semibold font-poppins">
               <Link href="/order">Order Online</Link>
             </Button>
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="bg-transparent border-white text-white hover:bg-white/10 font-semibold"
+              className="bg-transparent border-white text-white hover:bg-white/10 font-semibold font-poppins"
             >
               <Link href="/reservations">Book a Table</Link>
             </Button>
@@ -250,16 +285,21 @@ export default function HomePage() {
       </section>
 
       {/* Location */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Find Us</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6">
+          <div className="text-center mb-16 animate-fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">Find Us</h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8 animate-fadeIn animate-delay-100">
               <div className="flex items-start space-x-4">
-                <MapPin className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <MapPin className="w-6 h-6" />
+                </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Our Location</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-semibold mb-2 font-poppins">Our Location</h3>
+                  <p className="text-muted-foreground font-roboto">
                     123 Restaurant Street
                     <br />
                     Foodie City, FC 12345
@@ -268,10 +308,12 @@ export default function HomePage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Clock className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <Clock className="w-6 h-6" />
+                </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Opening Hours</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-semibold mb-2 font-poppins">Opening Hours</h3>
+                  <p className="text-muted-foreground font-roboto">
                     Monday - Friday: 11:00 AM - 10:00 PM
                     <br />
                     Saturday: 10:00 AM - 11:00 PM
@@ -282,10 +324,12 @@ export default function HomePage() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <Phone className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <Phone className="w-6 h-6" />
+                </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">Contact Us</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="text-xl font-semibold mb-2 font-poppins">Contact Us</h3>
+                  <p className="text-muted-foreground font-roboto">
                     Phone: (123) 456-7890
                     <br />
                     Email: info@yummybites.com
@@ -294,13 +338,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative h-[400px] rounded-lg overflow-hidden">
-              <Image
-                src="/placeholder.svg?height=400&width=600"
-                alt="Restaurant location map"
-                fill
-                className="object-cover"
-              />
+            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl animate-fadeIn animate-delay-200 img-modern">
+              <Image src="/images/restaurant-location.jpg" alt="Restaurant interior" fill className="object-cover" />
             </div>
           </div>
         </div>
