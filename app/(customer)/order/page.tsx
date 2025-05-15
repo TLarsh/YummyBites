@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
 import { MinusCircle, PlusCircle, ShoppingCart, Clock, MapPin } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function OrderPage() {
   // Menu categories and items (same as menu page)
@@ -134,6 +135,8 @@ export default function OrderPage() {
 
   // State for order type
   const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery")
+
+  const router = useRouter()
 
   // Add item to cart
   const addToCart = (item: { id: string; name: string; price: number }) => {
@@ -390,7 +393,20 @@ export default function OrderPage() {
                         </div>
                       </div>
 
-                      <Button className="w-full btn-hover-effect font-poppins">Proceed to Checkout</Button>
+                      <Button
+                        className="w-full btn-hover-effect font-poppins"
+                        onClick={() => {
+                          if (cart.length > 0) {
+                            // Store cart data in localStorage to access it on the checkout page
+                            localStorage.setItem("yummyBites_cart", JSON.stringify(cart))
+                            localStorage.setItem("yummyBites_orderType", orderType)
+                            router.push("/checkout")
+                          }
+                        }}
+                        disabled={cart.length === 0}
+                      >
+                        Proceed to Checkout
+                      </Button>
                     </>
                   )}
                 </CardContent>

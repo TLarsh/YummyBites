@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ScrollAnimation } from "@/components/scroll-animation"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,19 +16,33 @@ import { Badge } from "@/components/ui/badge"
 import { CheckCircle2, CreditCard, MapPin, ShoppingBag, Truck, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-// Mock order data (in a real app, this would come from your cart/state management)
-const orderItems = [
-  { id: "item1", name: "Classic Cheeseburger", price: 12.99, quantity: 1 },
-  { id: "item2", name: "Caesar Salad", price: 8.99, quantity: 1 },
-  { id: "item3", name: "Fresh Lemonade", price: 3.99, quantity: 2 },
-]
+// First, update the useState for orderItems to use the cart data from localStorage
+// Replace the mock orderItems constant with:
 
-export default function CheckoutPage() {
+const CheckoutPage = () => {
+  const [orderItems, setOrderItems] = useState([])
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<"details" | "payment" | "confirmation">("details")
   const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickup">("delivery")
   const [paymentMethod, setPaymentMethod] = useState<"credit-card" | "paypal">("credit-card")
   const [isProcessing, setIsProcessing] = useState(false)
+
+  // Add a useEffect to load the cart data when the component mounts
+  // Add this right after all the useState declarations:
+
+  useEffect(() => {
+    // Get cart data from localStorage
+    const savedCart = localStorage.getItem("yummyBites_cart")
+    const savedOrderType = localStorage.getItem("yummyBites_orderType")
+
+    if (savedCart) {
+      setOrderItems(JSON.parse(savedCart))
+    }
+
+    if (savedOrderType) {
+      setDeliveryMethod(savedOrderType as "delivery" | "pickup")
+    }
+  }, [])
 
   // Calculate order totals
   const subtotal = orderItems.reduce((total, item) => total + item.price * item.quantity, 0)
@@ -589,3 +603,5 @@ export default function CheckoutPage() {
     </div>
   )
 }
+
+export default CheckoutPage
